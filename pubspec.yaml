@@ -1,6 +1,6 @@
 name: flutter_application_coba_capsten
 description: "A new Flutter project."
-publish_to: 'none' 
+publish_to: 'none'
 
 version: 1.0.0+1
 
@@ -8,21 +8,32 @@ environment:
   sdk: ^3.5.3
 
 dependencies:
+  cupertino_icons: ^1.0.8
   flutter:
     sdk: flutter
+  get_it: ^8.0.3
   http: ^1.2.2
-  cupertino_icons: ^1.0.8
   image_picker: ^0.8.7+3
-  mockito: ^5.0.0
-  # qr_code_tools: ^1.0.3
-  # qr_code_scanner: ^0.6.1
-  # permission_handler: ^10.0.0
+  get: ^4.6.6
+  shared_preferences: ^2.0.16
+  dropdown_button2: ^2.0.0
+  geolocator: ^10.0.1
+  google_maps_flutter: ^2.2.1  # Update to the latest version if needed
+  location: ^5.0.0 
+  geocoding: ^2.0.5
+  firebase_core: ^2.12.0
+  firebase_auth: ^4.7.0
+  google_sign_in: ^6.0.0
+  permission_handler: ^10.2.0
+  
+
 
 dev_dependencies:
+
+  flutter_lints: ^4.0.0
   flutter_test:
     sdk: flutter
-    
-  flutter_lints: ^4.0.0
+  mockito: ^5.1.0
 
 flutter:
   uses-material-design: true

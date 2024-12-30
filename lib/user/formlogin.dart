@@ -1,13 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_coba_capsten/login/landingpage.dart';
+import 'package:flutter_application_coba_capsten/login/page.dart';
+import 'package:flutter_application_coba_capsten/user/penjualan.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:google_sign_in/google_sign_in.dart';  // Import package google_sign_in
 
-class FormLogin extends StatelessWidget {
-  FormLogin({Key? key}) : super(key: key);
+class FormLogin extends StatefulWidget {
+  const FormLogin({super.key});
 
+  @override
+  _FormLoginState createState() => _FormLoginState();
+
+  static bool validateEmail(String email) {
+    return email.isNotEmpty &&
+        email.contains('@') &&
+        email.endsWith('@gmail.com');
+  }
+
+  static bool validatePassword(String password) {
+    return password.length >= 6;
+  }
+}
+
+class _FormLoginState extends State<FormLogin> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _isPasswordVisible = false;
+
+  final GoogleSignIn _googleSignIn = GoogleSignIn();  // Instance GoogleSignIn
 
   // Fungsi validasi email
   bool validateEmail(String email) {
@@ -40,7 +61,7 @@ class FormLogin extends StatelessWidget {
 
     try {
       final response = await http.post(
-        Uri.parse('http://localhost:3000/api/login'),
+        Uri.parse('https://fluttermysqlapi.vercel.app/api/login'),
         headers: {"Content-Type": "application/json"},
         body: json.encode({
           'email': email,
@@ -54,7 +75,7 @@ class FormLogin extends StatelessWidget {
         if (data['message'] == 'Login berhasil') {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => LandingPage()),
+            MaterialPageRoute(builder: (context) => HalamanAwal()),
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -63,20 +84,54 @@ class FormLogin extends StatelessWidget {
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Login gagal, periksa email dan password')),
+          const SnackBar(content: Text('Login gagal, periksa email dan password')),
         );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Gagal terhubung ke server')),
+        const SnackBar(content: Text('Gagal terhubung ke server')),
       );
     }
   }
 
+ Future<void> _handleGoogleSignIn(BuildContext context) async {
+  try {
+    // Pastikan untuk sign out sebelum login
+    await _googleSignIn.signOut();  // Menghapus sesi login sebelumnya
+
+    // Lakukan login dan biarkan pengguna memilih akun
+    GoogleSignInAccount? user = await _googleSignIn.signIn();
+
+    if (user != null) {
+      // Login berhasil, tampilkan pesan selamat datang
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Selamat datang, ${user.displayName}!')),
+      );
+
+      // Lanjutkan ke halaman berikutnya setelah login
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HalamanAwal()), // Ganti dengan halaman tujuan
+      );
+    } else {
+      // Jika pengguna membatalkan login
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Login Google dibatalkan!')),
+      );
+    }
+  } catch (e) {
+    // Menampilkan error jika login gagal
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Gagal login dengan Google: $e')),
+    );
+  }
+}
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color.fromARGB(128, 9, 247, 255),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
@@ -84,30 +139,24 @@ class FormLogin extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               const SizedBox(height: 20),
-
-              // Header Welcome Back
               const Text(
-                'Welcome Back,',
+                '',
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(height: 8),
-
               const SizedBox(height: 20),
-
-              // Gambar
               Image.asset(
-                'assets/logoLogin.png',
-                height: 150,
+                'assets/user.png',
+                height: 300,
               ),
-
               const SizedBox(height: 30),
-
               // Input Email
               TextField(
                 controller: _emailController,
+                style: const TextStyle(color: Colors.white),
                 decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.email, color: Colors.green),
                   labelText: 'Email Address',
@@ -116,19 +165,23 @@ class FormLogin extends StatelessWidget {
                   ),
                 ),
               ),
-
               const SizedBox(height: 15),
-
               // Input Password
               TextField(
                 controller: _passwordController,
-                obscureText: true,
+                style: const TextStyle(color: Colors.white),
+                obscureText: !_isPasswordVisible,
                 decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.lock, color: Colors.green),
                   suffixIcon: IconButton(
-                    icon: const Icon(Icons.visibility, color: Colors.green),
+                    icon: Icon(
+                      _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                      color: Colors.green,
+                    ),
                     onPressed: () {
-                      // Tambahkan logika untuk toggle visibilitas password
+                      setState(() {
+                        _isPasswordVisible = !_isPasswordVisible;
+                      });
                     },
                   ),
                   labelText: 'Password',
@@ -137,7 +190,6 @@ class FormLogin extends StatelessWidget {
                   ),
                 ),
               ),
-
               // Forgot Password
               Align(
                 alignment: Alignment.centerRight,
@@ -153,10 +205,7 @@ class FormLogin extends StatelessWidget {
                   ),
                 ),
               ),
-
               const SizedBox(height: 20),
-
-              // Tombol Login
               ElevatedButton(
                 onPressed: () => _login(context),
                 style: ElevatedButton.styleFrom(
@@ -174,15 +223,11 @@ class FormLogin extends StatelessWidget {
                   ),
                 ),
               ),
-
               const SizedBox(height: 40),
-
               // Google Login
               InkWell(
                 onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Google login clicked!')),
-                  );
+                  _handleGoogleSignIn(context);  // Panggil fungsi login Google
                 },
                 child: Image.asset(
                   'assets/logoGoogle.png',

@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_coba_capsten/pengepul/formpengepul.dart';
 
 class Profilepengepul extends StatelessWidget {
+  const Profilepengepul({super.key});
+
   @override
 
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.green,
-        title: Text('Profil', style: TextStyle(color: Colors.black)),
-      ),
+      // appBar: AppBar(
+      //   backgroundColor: Colors.green,
+      //   title: const Text('Profil', style: TextStyle(color: Colors.black)),
+      // ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Column(
@@ -18,27 +21,27 @@ class Profilepengepul extends StatelessWidget {
             // Gambar Profil
             CircleAvatar(
               radius: 50,
-              backgroundImage: AssetImage('assets/avatar.png'), // Tambahkan gambar profil di sini
+              backgroundImage: const AssetImage('assets/avatar.png'), // Tambahkan gambar profil di sini
               backgroundColor: Colors.grey[200],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             
             // Username
-            Text(
+            const Text(
               'USERNAME: RETZA',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             
             // Alamat
-            Text(
+            const Text(
               'ALAMAT: RANDUGUNTING',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             
             // Jenis Kelamin
-            Text(
+            const Text(
               'JENIS KELAMIN',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
@@ -53,10 +56,10 @@ class Profilepengepul extends StatelessWidget {
                       onChanged: (value) {},
                       activeColor: Colors.green,
                     ),
-                    Text('Laki-laki'),
+                    const Text('Laki-laki'),
                   ],
                 ),
-                SizedBox(width: 20),
+                const SizedBox(width: 20),
                 Row(
                   children: [
                     Radio(
@@ -65,37 +68,86 @@ class Profilepengepul extends StatelessWidget {
                       onChanged: (value) {},
                       activeColor: Colors.green,
                     ),
-                    Text('Perempuan'),
+                    const Text('Perempuan'),
                   ],
                 ),
               ],
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             
             // Email
-            Text(
+            const Text(
               'EMAIL ADDRESS: RETZA@GMAIL.COM',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
             
             // Tombol Log Out
+           ElevatedButton(
+  onPressed: () {
+    // Tampilkan dialog konfirmasi logout
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: const Text(
+            'Konfirmasi Logout',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: const Text('Apakah Anda yakin ingin keluar?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Tutup dialog
+              },
+              child: const Text(
+                'Batal',
+                style: TextStyle(color: Colors.grey),
+              ),
+            ),
             ElevatedButton(
               onPressed: () {
-                // Logika log out bisa ditambahkan di sini
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(
+                    builder: (context) => const FormLoginpengepul(), // Ganti dengan halaman login Anda
+                  ),
+                  (route) => false, // Hapus semua route sebelumnya
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
-                padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              child: Text(
-                'LOG-OUT',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              child: const Text(
+                'Logout',
+                style: TextStyle(color: Colors.white),
               ),
             ),
+          ],
+        );
+      },
+    );
+  },
+  style: ElevatedButton.styleFrom(
+    backgroundColor: Colors.red,
+    padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(8),
+    ),
+  ),
+  child: const Text(
+    'LOG-OUT',
+    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+  ),
+),
           ],
         ),
       ),

@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "387079272344",
+    "project_id": "simpas-72cec",
+    "storage_bucket": "simpas-72cec.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:387079272344:android:70d74ccadee1ea91c99ded",
+        "android_client_info": {
+          "package_name": "com.example.flutter_application_coba_ui"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "387079272344-i7t3m1u9tptjdfdc2sjcirtr39181u8n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.flutter_application_coba_ui",
+            "certificate_hash": "aac89603b8cda74fdf9b713d52efebf54bfda5bd"
+          }
+        },
+        {
+          "client_id": "387079272344-be86n653celpf7ho4k37d5vi36884npu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAV5fziItWbiYhHUY5Wm3en0W2hBBCVLC0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "387079272344-be86n653celpf7ho4k37d5vi36884npu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

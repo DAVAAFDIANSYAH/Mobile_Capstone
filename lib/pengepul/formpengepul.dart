@@ -1,14 +1,19 @@
 import 'dart:convert';
-import 'package:flutter_application_coba_capsten/topup.dart';
+import 'package:flutter_application_coba_capsten/pengepul/Topup.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:flutter_application_coba_capsten/pengepul.dart';
 
-class FormLoginpengepul extends StatelessWidget {
-  FormLoginpengepul ({Key? key}) : super(key: key);
+class FormLoginpengepul extends StatefulWidget {
+  const FormLoginpengepul({super.key});
 
+  @override
+  _FormLoginpengepulState createState() => _FormLoginpengepulState();
+}
+
+class _FormLoginpengepulState extends State<FormLoginpengepul> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _isPasswordVisible = false; // State untuk toggle visibilitas password
 
   void _login(BuildContext context) async {
     String email = _emailController.text;
@@ -16,7 +21,7 @@ class FormLoginpengepul extends StatelessWidget {
 
     try {
       final response = await http.post(
-        Uri.parse('http://localhost:3000/api/loginPengepul'),
+        Uri.parse('https://fluttermysqlapi.vercel.app/api/loginPengepul'),
         headers: {"Content-Type": "application/json"},
         body: json.encode({
           'email': email,
@@ -30,7 +35,7 @@ class FormLoginpengepul extends StatelessWidget {
         if (data['message'] == 'Login berhasil') {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => OrderDetailPage()),
+            MaterialPageRoute(builder: (context) => const Topup()),
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -39,12 +44,12 @@ class FormLoginpengepul extends StatelessWidget {
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Login gagal, periksa email dan password')),
+          const SnackBar(content: Text('Login gagal, periksa email dan password')),
         );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Gagal terhubung ke server')),
+        const SnackBar(content: Text('Gagal terhubung ke server')),
       );
     }
   }
@@ -52,7 +57,7 @@ class FormLoginpengepul extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color.fromARGB(48, 33, 128, 243),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
@@ -63,27 +68,19 @@ class FormLoginpengepul extends StatelessWidget {
 
               // Header Welcome Back
               const Text(
-                'Welcome Back,',
+                '',
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(height: 8),
-              // const Text(
-              //   'Log in now to continue',
-              //   style: TextStyle(
-              //     fontSize: 16,
-              //     color: Colors.grey,
-              //   ),
-              // ),
-
               const SizedBox(height: 20),
 
               // Gambar
               Image.asset(
-                'assets/logoLogin.png', // Pastikan file ini ada di folder assets Anda
-                height: 150,
+                'assets/pembersih.png', // Pastikan file ini ada di folder assets Anda
+                height: 300,
               ),
 
               const SizedBox(height: 30),
@@ -91,6 +88,7 @@ class FormLoginpengepul extends StatelessWidget {
               // Input Email
               TextField(
                 controller: _emailController,
+                style: const TextStyle(color: Colors.white),
                 decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.email, color: Colors.green),
                   labelText: 'Email Address',
@@ -105,13 +103,21 @@ class FormLoginpengepul extends StatelessWidget {
               // Input Password
               TextField(
                 controller: _passwordController,
-                obscureText: true,
+                style: const TextStyle(color: Colors.white),
+                obscureText: !_isPasswordVisible, // Kontrol visibilitas password
                 decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.lock, color: Colors.green),
                   suffixIcon: IconButton(
-                    icon: const Icon(Icons.visibility, color: Colors.green),
+                    icon: Icon(
+                      _isPasswordVisible
+                           ? Icons.visibility // Ikon untuk "tutup"
+                          : Icons.visibility_off,    
+                      color: Colors.green,
+                    ),
                     onPressed: () {
-                      // Tambahkan logika untuk toggle visibilitas password
+                      setState(() {
+                        _isPasswordVisible = !_isPasswordVisible; // Toggle state
+                      });
                     },
                   ),
                   labelText: 'Password',
@@ -161,17 +167,17 @@ class FormLoginpengepul extends StatelessWidget {
               const SizedBox(height: 40),
 
               // Google Login
-              InkWell(
-                onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Google login clicked!')),
-                  );
-                },
-                child: Image.asset(
-                  'assets/logoGoogle.png', // Pastikan logo Google Anda ada di folder assets
-                  height: 40,
-                ),
-              ),
+              // InkWell(
+              //   onTap: () {
+              //     ScaffoldMessenger.of(context).showSnackBar(
+              //       const SnackBar(content: Text('Google login clicked!')),
+              //     );
+              //   },
+              //   child: Image.asset(
+              //     'assets/logoGoogle.png', // Pastikan logo Google Anda ada di folder assets
+              //     height: 40,
+              //   ),
+              // ),
             ],
           ),
         ),
